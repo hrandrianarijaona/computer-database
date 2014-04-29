@@ -1,28 +1,95 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <jsp:include page="../include/header.jsp" />
-<script type="text/javascript" src="jquery-2.1.0.min.js"></script>
-<script type="text/javascript" src="jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.js"></script>
+<script type="text/javascript" src="dist/jquery.validate.js"></script>
 
-<script>
-jQuery(document).ready(function() {
-	   jQuery("#formStep").validate({
-	      rules: {
-	         "montextarea":{
-	            "required": true,
-	            "minlength": 2,
-	            "maxlength": 60000
-	         },
-	         "monemail": {
-	            "email": true,
-	            "maxlength": 255
-	         },
-	         "montelephone": {
-	            "required": true
-	         }
-	  	  }
-	});
+<script type="text/javascript">
+$(document).ready(
+		function() {
+			jQuery.validator.addMethod("dateFormat", function(value,
+					element) {
+				var re = /^\d{4}-\d{1,2}-\d{1,2}$/;
+				return (this.optional(element) && value == "")
+						|| re.test(value);
+			}, jQuery.validator.format("Incorrect format"));
+			
+			jQuery.validator.addMethod("checkDate", function(value,
+					element) {
+				var elem = value.split('-');
+				var day = parseInt(elem[2]);
+				var month = parseInt(elem[1]);
+				var year = parseInt(elem[0]);
+				if (day == 31 
+					&& (month == 4 || month == 6 || month == 9 ||
+						month == 11 || month == 04 || month == 06 ||
+						month == 09)
+					) {
+					return false; // only 1,3,5,7,8,10,12 has 31 days
+				} else if (month == 2) { // fevrier
+					// année bissextile
+					if(year % 4==0){
+						if(day == 30 || day == 31){
+							return false;
+						}else{
+							return true;
+						}
+					}else{
+						if(day == 29||day == 30||day == 31){
+							return false;
+						}else{
+							return true;
+						}
+					}
+				}else{				 
+					return true;				 
+				}
+			}, jQuery.validator.format("This date is not valid"));
 
+			jQuery.validator.addMethod("endDate", function(value, element) {
+				var startDate = $('#introducedDate').val();
+				if ($.trim(value).length > 0)
+					return Date.parse(startDate) <= Date.parse(value);
+				else
+					return true;
+			}, "Discontinued date must be after introduced date");
+
+			jQuery.validator.addMethod("requireIntroduced", function(value,
+					element) {
+				var startDate = $('#introducedDate').val();
+				if ($.trim(value).length > 0)
+					return $.trim(startDate).length > 0;
+				else
+					return true;
+			}, "Discontinued date requires an introduced date first");
+
+			jQuery(document).ready(function() {
+				jQuery("#addComputerForm").validate({
+					highlight : function(element, errorClass) {
+						$(element).fadeOut(function() {
+							$(element).fadeIn();
+						});
+					},
+					rules : {
+						"name" : {
+							"required" : true,
+							"maxlength" : 255
+						},
+						"introducedDate" : {
+							dateFormat : true,
+							checkDate : true
+						},
+						"discontinuedDate" : {
+							dateFormat : true,
+							checkDate : true,
+							requireIntroduced : true,
+							endDate : true
+						}
+					}
+				});
+			});
+		});
 </script>
+
 
 <section id="main">
 
@@ -33,7 +100,7 @@ jQuery(document).ready(function() {
 			<div class="clearfix">
 				<label for="name">Computer name:</label>
 				<div class="input-group">
-					<input class="form-control" type="text" name="name" /> <span
+					<input class="form-control required" type="text" id="name" name="name" /> <span
 						class="input-group-addon">Required</span>
 				</div>
 			</div>
@@ -41,7 +108,7 @@ jQuery(document).ready(function() {
 			<div class="clearfix">
 				<label for="introduced">Introduced date:</label>
 				<div class="input-group">
-					<input class="form-control" type="date" name="introducedDate"
+					<input class="form-control" type="date" id="introducedDate" name="introducedDate"
 						pattern="\d{4}-\d{1,2}-\d{1,2}" /> <span
 						class="input-group-addon">YYYY-MM-DD</span>
 				</div>
@@ -49,7 +116,7 @@ jQuery(document).ready(function() {
 			<div class="clearfix">
 				<label for="discontinued">Discontinued date:</label>
 				<div class="input-group">
-					<input class="form-control" type="date" name="introducedDate"
+					<input class="form-control" type="date" id="discontinuedDate" name="discontinuedDate"
 						pattern="\d{4}-\d{1,2}-\d{1,2}" /> <span
 						class="input-group-addon">YYYY-MM-DD</span>
 				</div>
@@ -72,12 +139,7 @@ jQuery(document).ready(function() {
 				href="RedirectIndexServlet" class="btn btn-default">Cancel</a>
 		</div>
 	</form>
-	<script>
-		$(document).ready(function(){
-			$("#addComputerForm").validate();
-		}				
-		);
-	</script>
+
 	<p id="msg_err">${ msg }</p>
 </section>
 

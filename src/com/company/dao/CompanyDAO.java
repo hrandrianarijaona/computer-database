@@ -13,6 +13,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.company.connection.PoolConnection;
 import com.company.connection.ProjetConnection;
 import com.company.om.Company;
 
@@ -21,29 +22,27 @@ import com.company.om.Company;
  * @author hrandr
  *
  */
-public class CompanyDAO {
-
-	public static CompanyDAO cdao = null;
+public enum CompanyDAO implements ICompanyDAO{
+	INSTANCE;
 	
+
 	private CompanyDAO() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	/**
 	 * Sert à obtenir l'unique instance de CompanyDAO
 	 * @return
 	 */
 	public static CompanyDAO getInstance(){
-		if(cdao==null)
-			cdao = new CompanyDAO();
-		return cdao;
+		return INSTANCE;
 	}
 
 	/**
 	 * Liste toute les companies répertorié
 	 * @return
 	 */
-	public List<Company> getListCompany() {
+	public List<Company> getListCompany(Connection connection) {
 		ArrayList<Company> al = new ArrayList<Company>();
 
 		// requete de recuperation des companies répertorié dans la base
@@ -51,21 +50,19 @@ public class CompanyDAO {
 		ResultSet results = null;
 		Statement stmt = null;
 
-		//Connection c = getConnectionJNDI();
-		Connection c = ProjetConnection.getInstance();
-
-		if(c != null){
+		if(connection != null){
 
 			try {
-				stmt = c.createStatement();
+				stmt = connection.createStatement();
 				results = stmt.executeQuery(query);
 
 				while(results.next()){
 					// Recuperation des donnéees de la ligne
-					int id = results.getInt("id");
+					Long id = results.getLong("id");
 					String name = results.getString("name");
 
-					al.add(new Company(id, name));
+					al.add(Company.getCompanyBuilder().id(id).name(name).build()); // Company créer avec le pattern Builder
+					// al.add(new Company(id, name));
 
 				}
 
@@ -80,10 +77,7 @@ public class CompanyDAO {
 						results.close();
 					if(stmt != null)
 						stmt.close();
-					/*
-					if(c != null)
-						c.close();
-					 */
+
 
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -102,17 +96,15 @@ public class CompanyDAO {
 	 * Insert une companie dans la base
 	 * @param cp
 	 */
-	public void insereCompany(Company cp) {
+	public void insertCompany(Company cp, Connection connection) {
 
 		// ajoutez ici le code d'insertion d'un produit
 		String query = "INSERT INTO company(name) VALUES(?);";
 		int results = 0;
 		PreparedStatement pstmt = null;
 
-		Connection c = ProjetConnection.getInstance();
-
 		try {
-			pstmt = c.prepareStatement(query);
+			pstmt = connection.prepareStatement(query);
 			pstmt.setString(1, cp.getName());
 			System.out.println("La requete: " + pstmt.toString());
 
@@ -129,10 +121,6 @@ public class CompanyDAO {
 
 				if(pstmt != null)
 					pstmt.close();
-				/*
-				if(c != null)
-					c.close();
-				 */
 
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -147,26 +135,25 @@ public class CompanyDAO {
 	 * @param paramId l'id à rechercher
 	 * @return L'objet Company
 	 */
-	public Company findCompanyById(int paramId){
-		Company company = new Company();
+	public Company findCompanyById(Long paramId, Connection connection){
+		// Company company = new Company();
+		Company company = Company.getCompanyBuilder().build(); // créée par le pattern Builder
 
 		// requete de recuperation des companies répertorié dans la base
 		String query = "SELECT * FROM company WHERE id=?;";
 		ResultSet results = null;
 		PreparedStatement pstmt = null;
 
-		Connection c = ProjetConnection.getInstance();
-
-		if(c != null){
+		if(connection != null){
 
 			try {
-				pstmt = c.prepareStatement(query);
-				pstmt.setInt(1, paramId);
+				pstmt = connection.prepareStatement(query);
+				pstmt.setLong(1, paramId);
 				results = pstmt.executeQuery();
 
 				while(results.next()){
 					// Recuperation des donnéees de la ligne
-					int id = results.getInt("id");
+					Long id = results.getLong("id");
 					String name = results.getString("name");
 					company.setId(id);
 					company.setName(name);

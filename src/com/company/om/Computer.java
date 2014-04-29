@@ -4,17 +4,17 @@ import org.joda.time.DateTime;
 
 public class Computer {
 
-	private int id;
+	private Long id;
 	private String name;
 	private DateTime introducedDate;
 	private DateTime discontinuedDate;
 	private Company company;
 	
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
@@ -29,6 +29,17 @@ public class Computer {
 	public DateTime getIntroducedDate() {
 		return introducedDate;
 	}
+	
+	/**
+	 * Affiche la date uniquement
+	 * @return
+	 */
+	public String getIntroducedDateString() {
+		if(introducedDate!=null)
+			return new java.sql.Date(introducedDate.getMillis()).toString();
+		else
+			return "";
+	}
 
 	public void setIntroducedDate(DateTime introducedDate) {
 		this.introducedDate = introducedDate;
@@ -36,6 +47,17 @@ public class Computer {
 	
 	public DateTime getDiscontinuedDate() {
 		return discontinuedDate;
+	}
+	
+	/**
+	 * Affiche la date uniquement
+	 * @return
+	 */
+	public String getDiscontinuedDateString() {
+		if(discontinuedDate!=null)
+			return new java.sql.Date(discontinuedDate.getMillis()).toString();
+		else
+			return "";
 	}
 
 	public void setDiscontinuedDate(DateTime discontinuedDate) {
@@ -54,7 +76,7 @@ public class Computer {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Computer(int id, String name, DateTime introducedDate,
+	public Computer(Long id, String name, DateTime introducedDate,
 			DateTime discontinuedDate, Company company) {
 		super();
 		this.id = id;
@@ -71,6 +93,8 @@ public class Computer {
 				+ ", company=" + company + "]";
 	}
 
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -79,7 +103,7 @@ public class Computer {
 		result = prime
 				* result
 				+ ((discontinuedDate == null) ? 0 : discontinuedDate.hashCode());
-		result = prime * result + id;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result
 				+ ((introducedDate == null) ? 0 : introducedDate.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -105,7 +129,10 @@ public class Computer {
 				return false;
 		} else if (!discontinuedDate.equals(other.discontinuedDate))
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (introducedDate == null) {
 			if (other.introducedDate != null)
@@ -119,9 +146,55 @@ public class Computer {
 			return false;
 		return true;
 	}
-
 	
+	public Computer(ComputerBuilder cb){
+		this.id = cb.id;
+		this.name = cb.name;
+		this.company = cb.company;
+		this.discontinuedDate = cb.discontinuedDate;
+		this.introducedDate = cb.introducedDate;
+	}
 
+	public static class ComputerBuilder{
+		private Long id;
+		private String name;
+		private DateTime introducedDate; // optionnel
+		private DateTime discontinuedDate; // optionnel
+		private Company company;
+		
+		public ComputerBuilder id(Long id){
+			this.id = id;
+			return this;
+		}
+		
+		public ComputerBuilder name(String name){
+			this.name = name;
+			return this;
+		}
+		
+		public ComputerBuilder introducedDate(DateTime introducedDate){
+			this.introducedDate = introducedDate;
+			return this;
+		}
+		
+		public ComputerBuilder discontinuedDate(DateTime discontinuedDate){
+			this.discontinuedDate = discontinuedDate;
+			return this;
+		}
+		
+		public ComputerBuilder company(Company company){
+			this.company = company;
+			return this;
+		}
+		
+		public Computer build(){
+			return new Computer(this);
+		}
+	}
+
+	public static ComputerBuilder getComputerBuilder(){
+		return new ComputerBuilder();
+	}
 	
 	
 

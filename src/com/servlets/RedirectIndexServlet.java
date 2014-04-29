@@ -1,6 +1,8 @@
 package com.servlets;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.company.connection.PoolConnection;
+import com.company.dao.LogDAO;
 import com.company.om.Computer;
 import com.company.services.ComputerService;
 
@@ -33,39 +40,94 @@ public class RedirectIndexServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		// verif sur le parametre page
+		
+		int c; // 0 => Par nom croissant, 1 => nom décroissant, 2 => introDate croissant, 3 => introDate décroissant, 4 => discDate croissant, 5 => discDate décroissant, 6 => company croissant, 7 => company décroissant
+		int page = 0, interval = 20;
+		
+		// recupere les paramètres de page
 		String sPage = request.getParameter("page");
-		int page = 1;
-		if(sPage!=null)
-			page = Integer.parseInt(request.getParameter("page"));
-
-		// verif sur le parametre interval
 		String sInterval = request.getParameter("interval");
-		int interval = 20;
+		String sFiltre = request.getParameter("filter");
+		
+		// vérifie les paramètres et les initialise sinon
+		if(sPage!=null)
+			page = Integer.parseInt(sPage);
 		if(sInterval!=null)
-			interval = Integer.parseInt(request.getParameter("interval"));
-
+			interval = Integer.parseInt(sInterval);
+		if(sFiltre==null)
+			sFiltre = "";
+		
+		// on rattache à la jsp
+		request.setAttribute("page", page);
+		request.setAttribute("interval", interval);
+		request.setAttribute("filter", sFiltre);
+		
+		if(request.getParameter("codeTri")!=null)
+			c = Integer.parseInt(request.getParameter("codeTri"));
+		else
+			c = 0;
+		
+		request.setAttribute("codeTri", c);
+		
+		// Choix de l'ordre
+		List<Computer> computerList = null;
+		//computerList = ComputerService.getInstance().getListComputersWithRange(page, interval);
+		switch(c){
+		case 0:
+			//computerList = ComputerService.getInstance().getListComputersByFilteringAndOrdering(0, true);
+			computerList = ComputerService.getInstance().searchComputersByFilteringAndOrderingWithRange(sFiltre, page, interval, 0, true);
+			break;
+		case 1:
+			//computerList = ComputerService.getInstance().getListComputersByFilteringAndOrdering(0, false);
+			computerList = ComputerService.getInstance().searchComputersByFilteringAndOrderingWithRange(sFiltre, page, interval, 0, false);
+			break;
+		case 2:
+			//computerList = ComputerService.getInstance().getListComputersByFilteringAndOrdering(1, true);
+			computerList = ComputerService.getInstance().searchComputersByFilteringAndOrderingWithRange(sFiltre, page, interval, 1, true);
+			break;
+		case 3:
+			//computerList = ComputerService.getInstance().getListComputersByFilteringAndOrdering(1, false);
+			computerList = ComputerService.getInstance().searchComputersByFilteringAndOrderingWithRange(sFiltre, page, interval, 1, false);
+			break;
+		case 4:
+			//computerList = ComputerService.getInstance().getListComputersByFilteringAndOrdering(2, true);
+			computerList = ComputerService.getInstance().searchComputersByFilteringAndOrderingWithRange(sFiltre, page, interval, 2, true);
+			break;
+		case 5:
+			//computerList = ComputerService.getInstance().getListComputersByFilteringAndOrdering(2, false);
+			computerList = ComputerService.getInstance().searchComputersByFilteringAndOrderingWithRange(sFiltre, page, interval, 2, false);
+			break;
+		case 6:
+			//computerList = ComputerService.getInstance().getListComputersByFilteringAndOrdering(3, true);
+			computerList = ComputerService.getInstance().searchComputersByFilteringAndOrderingWithRange(sFiltre, page, interval, 3, true);
+			break;
+		case 7:
+			//computerList = ComputerService.getInstance().getListComputersByFilteringAndOrdering(3, false);
+			computerList = ComputerService.getInstance().searchComputersByFilteringAndOrderingWithRange(sFiltre, page, interval, 3, false);
+			break;
+		default:
+			//computerList = ComputerService.getInstance().getListComputersByFilteringAndOrdering(0, true);
+			System.out.println("Mauvaise initialisation du codeTri...");
+		}
 
 		// compte le nb de Computer dans la base
 		int nbComputer = ComputerService.getInstance().getNbComputer();
 		request.setAttribute("nbComputer", nbComputer);
 
 		// liste les Computers
-		List<Computer> computerList = null;
-		computerList = ComputerService.getInstance().getListComputersWithRange(page, interval);
 		request.setAttribute("computerList", computerList);
 
 		// tous les Computer pour la navigation
 		List<Computer> allComputerList = ComputerService.getInstance().getListComputers();
 		request.setAttribute("allComputerList", allComputerList);
-
-		// nombre de page
-		int tailleRes = allComputerList.size()/interval;
-		int nbPage = tailleRes;
-		if(tailleRes%interval>0) // si il y a un reste, alors on ajoute une page supplémentaire
-			nbPage++;
+		
+		// calcul du nombre de page
+		int nbPage;
+		if(sFiltre.length()>0)
+			nbPage = (int) Math.ceil(ComputerService.getInstance().searchComputersByFilteringAndOrdering(sFiltre, 0, true).size()/interval); // retourne le nombre de Computer correspondant au critère de recherche
+		else
+			nbPage = (int) Math.ceil(allComputerList.size()/interval);
 		request.setAttribute("nbPage", nbPage);
-
 
 		this.getServletContext().getRequestDispatcher( "/WEB-INF/dashboard.jsp" ).forward( request, response );
 	}

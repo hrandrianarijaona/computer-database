@@ -24,7 +24,7 @@ public class DeleteComputerServlet extends HttpServlet {
 
 		StringBuilder sb = new StringBuilder();
 
-		Integer id = Integer.parseInt(request.getParameter("id"));
+		Long id = Long.parseLong(request.getParameter("id"));
 		if((id==null)||(id==0)){
 			sb.append("Accès à la page de manière illégal...");
 			// On envoie le message d'erreur
@@ -42,7 +42,7 @@ public class DeleteComputerServlet extends HttpServlet {
 		}
 		else{
 			// On supprime le Computer de la base
-			ComputerDAO.getInstance().deleteComputer(id);
+			ComputerService.getInstance().deleteComputer(id);
 
 			// compte le nb de Computer dans la base
 			int nbComputer = ComputerService.getInstance().getNbComputer();
