@@ -293,12 +293,16 @@ public enum ComputerDAO implements IComputerDAO{
 	/**
 	 * Insert un ordinateur/computer dans la base
 	 */
-	public void insertComputer(Computer cp, Connection connection) {
+	public Long insertComputer(Computer cp, Connection connection) {
 
+		Long id = null;
+		
 		// ajoutez ici le code d'insertion d'un produit
 		String query = "INSERT INTO computer(name,introduced,discontinued,company_id) VALUES(?,?,?,?);";
 		int results = 0;
 		PreparedStatement pstmt = null;
+		
+		
 
 		try {
 			pstmt = connection.prepareStatement(query);
@@ -319,6 +323,22 @@ public enum ComputerDAO implements IComputerDAO{
 			results = pstmt.executeUpdate();
 
 			System.out.println("Insertion bien effectué...");
+			
+			try {
+				// On recupère l'id généré
+				ResultSet rsId = pstmt.getGeneratedKeys();
+				while(rsId.next()){
+					id = rsId.getLong(1);
+				}
+				
+				// fermeture de rsId
+				PoolConnection.INSTANCE.closeObject(rsId);
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				System.out.println("Probleme dans la génération des id Computer...");
+			}
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -335,6 +355,7 @@ public enum ComputerDAO implements IComputerDAO{
 				e.printStackTrace();
 			}
 		}
+		return id;
 
 	}
 

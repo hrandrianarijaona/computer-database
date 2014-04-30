@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.company.connection.PoolConnection;
 import com.company.dao.LogDAO;
 import com.company.om.Computer;
+import com.company.om.Page;
 import com.company.services.ComputerService;
 
 /**
@@ -58,16 +59,16 @@ public class RedirectIndexServlet extends HttpServlet {
 			sFiltre = "";
 		
 		// on rattache à la jsp
-		request.setAttribute("page", page);
-		request.setAttribute("interval", interval);
-		request.setAttribute("filter", sFiltre);
+//		request.setAttribute("page", page);
+//		request.setAttribute("interval", interval);
+//		request.setAttribute("filterText", sFiltre);
 		
 		if(request.getParameter("codeTri")!=null)
 			c = Integer.parseInt(request.getParameter("codeTri"));
 		else
 			c = 0;
 		
-		request.setAttribute("codeTri", c);
+//		request.setAttribute("codeTri", c);
 		
 		// Choix de l'ordre
 		List<Computer> computerList = null;
@@ -112,14 +113,14 @@ public class RedirectIndexServlet extends HttpServlet {
 
 		// compte le nb de Computer dans la base
 		int nbComputer = ComputerService.getInstance().getNbComputer();
-		request.setAttribute("nbComputer", nbComputer);
+//		request.setAttribute("nbComputer", nbComputer);
 
 		// liste les Computers
-		request.setAttribute("computerList", computerList);
+//		request.setAttribute("computerList", computerList);
 
 		// tous les Computer pour la navigation
 		List<Computer> allComputerList = ComputerService.getInstance().getListComputers();
-		request.setAttribute("allComputerList", allComputerList);
+//		request.setAttribute("allComputerList", allComputerList);
 		
 		// calcul du nombre de page
 		int nbPage;
@@ -127,7 +128,10 @@ public class RedirectIndexServlet extends HttpServlet {
 			nbPage = (int) Math.ceil(ComputerService.getInstance().searchComputersByFilteringAndOrdering(sFiltre, 0, true).size()/interval); // retourne le nombre de Computer correspondant au critère de recherche
 		else
 			nbPage = (int) Math.ceil(allComputerList.size()/interval);
-		request.setAttribute("nbPage", nbPage);
+//		request.setAttribute("nbPage", nbPage);
+		
+		Page<Computer> laPage = new Page<>(nbComputer, page, interval, c, nbPage, sFiltre, computerList);
+		request.setAttribute("pageComputer", laPage);
 
 		this.getServletContext().getRequestDispatcher( "/WEB-INF/dashboard.jsp" ).forward( request, response );
 	}

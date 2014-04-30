@@ -3,7 +3,7 @@
 <jsp:include page="../include/header.jsp" />
 
 <section id="main">
-	<h1 id="homeTitle">${ nbComputer } Computers found</h1>
+	<h1 id="homeTitle">${ pageComputer.totalCount } Computers found</h1>
 
 	<div id="actions">
 		<form action="RedirectIndexServlet" method="GET">
@@ -54,7 +54,7 @@
 		<tbody>
 
 
-			<c:forEach items="${ computerList }" var="comp">
+			<c:forEach items="${ pageComputer.liste }" var="comp">
 				<tr>
 					<td><a href="#"><c:out value="${comp.name}" /></td>
 					<td><c:out value="${comp.getIntroducedDateString()}" /></td>
@@ -77,32 +77,9 @@
 		</tbody>
 	</table>
 
-	<pg:pagination computers="${ computerList }" total="${ nbComputer }"
-		pageEnCours="${ page }"	filterText="${ filterText }" codeTri="${ codeTri }" interval="${ interval }" nbPage="${ nbPage }" />
+	<pg:pagination computers="${ pageComputer.liste }" total="${ pageComputer.totalCount }"
+		pageEnCours="${ pageComputer.currentPage }"	filterText="${ pageComputer.filter }" codeTri="${ pageComputer.codeTri }" interval="${ pageComputer.pageLimit }" nbPage="${ pageComputer.nbPage }" />
  
-	<!-- 
-	<center>
-		<div id="navPagination">
-			<ul class="pagination">
-				<li><a href="#">&laquo;</a></li>
-
-
-				<c:forEach var="i" begin="1" end="${nbPage}" step="1">
-					<li><a
-						href="<c:url value="RedirectIndexServlet">
-							<c:param name="page" value="${ i }" />
-							<c:param name="interval" value="20" />
-						</c:url>">${ i }</a>
-
-					</li>
-				</c:forEach>
-
-				<li><a href="#">&raquo;</a></li>
-			</ul>
-		</div>
-	</center>
- -->
-
 
 	<p id="msg_err">${ msg }</p>
 </section>

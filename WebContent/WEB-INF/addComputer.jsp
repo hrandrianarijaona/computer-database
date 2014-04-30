@@ -43,7 +43,7 @@ $(document).ready(
 				}else{				 
 					return true;				 
 				}
-			}, jQuery.validator.format("This date is not valid"));
+			}, "This date is not valid");
 
 			jQuery.validator.addMethod("endDate", function(value, element) {
 				var startDate = $('#introducedDate').val();

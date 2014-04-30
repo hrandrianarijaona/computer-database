@@ -168,12 +168,13 @@ public enum ComputerService {
 	 */
 	public void insertComputer(Computer cp) {
 		Connection connection = null;
+		Long id = null;
 		try {
 			connection = PoolConnection.INSTANCE.getConnection();
-			log.info("Insertion d'un Computer... " + connection);
 			connection.setAutoCommit(false);
-			ComputerDAO.getInstance().insertComputer(cp, connection);
-			LogService.INSTANCE.addLog("Insertion d'un computer", TypeLog.INFOS, connection);
+			id = ComputerDAO.getInstance().insertComputer(cp, connection);
+			log.info("Insertion du Computer (" + id + ")..." + connection);
+			LogService.INSTANCE.addLog("Insertion du computer (" + id + ")", TypeLog.INFOS, connection);
 			connection.commit();
 			connection.setAutoCommit(true);
 		} catch (SQLException e) {

@@ -63,12 +63,13 @@ public enum CompanyService {
 	 */
 	public void insertCompany(Company cp) {
 		Connection connection = null;
+		Long id = null;
 		try {
 			connection = PoolConnection.INSTANCE.getConnection();
-			log.info("insertCompany... " + connection);
 			connection.setAutoCommit(false);
-			CompanyDAO.INSTANCE.insertCompany(cp, connection);
-			LogService.INSTANCE.addLog("insertCompany", TypeLog.INFOS, connection);
+			id = CompanyDAO.INSTANCE.insertCompany(cp, connection);
+			log.info("insertCompany(" + id + ")" + connection);
+			LogService.INSTANCE.addLog("insertCompany(" + id + ")", TypeLog.INFOS, connection);
 			connection.commit();
 			connection.setAutoCommit(true);
 		} catch (SQLException e) {

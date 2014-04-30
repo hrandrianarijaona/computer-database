@@ -21,15 +21,43 @@ import com.company.om.Page;
 import com.company.services.CompanyService;
 import com.company.services.ComputerService;
 import com.company.validator.ComputerValidator;
-@WebServlet("/AddComputerServlet")
-public class AddComputerServlet extends HttpServlet {
 
-	public AddComputerServlet() {
+/**
+ * Servlet implementation class EditComputerServlet
+ */
+@WebServlet("/EditComputerServlet")
+public class EditComputerServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public EditComputerServlet() {
+		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		// on récupère les attributs du formulaire
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		// On recupère le Computer à éditer
+		Computer computer = ComputerService.getInstance().findComputerById(Long.parseLong(request.getParameter("id")));
+		request.setAttribute("computer", computer);
+
+		// On recupere la liste des Company
+		List<Company> companyList = CompanyService.getInstance().getListCompany();		
+		request.setAttribute("companyList", companyList);
+
+		this.getServletContext().getRequestDispatcher( "/WEB-INF/editComputer.jsp" ).forward( request, response );
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		String name = request.getParameter("name");
 		DateTime introducedDate = null;
 		DateTime discontinuedDate = null;
@@ -44,16 +72,17 @@ public class AddComputerServlet extends HttpServlet {
 
 		Long idCompany = Long.parseLong(request.getParameter("company"));
 
-		// -------------------------------------------------------------------------------------------------
-
+		// Verification des paramètres
 		ComputerDTO cdto = new ComputerDTO();
 		cdto.setName(name);
 		cdto.setIntroducedDate(request.getParameter("introducedDate"));
 		cdto.setDiscontinuedDate(request.getParameter("discontinuedDate"));
 		cdto.setIdCompany(request.getParameter("company"));
-
-		// On verifie les parametres
 		HashMap<Integer, Integer> errorList = ComputerValidator.validate(cdto);
+
+
+
+
 
 		// empty si aucune erreur
 		if(errorList.isEmpty()){
@@ -78,31 +107,30 @@ public class AddComputerServlet extends HttpServlet {
 			
 			// On crée le Computer
 			Computer c = new Computer();
+			c.setId(Long.parseLong(request.getParameter("id")));
 			c.setName(name);
 			c.setIntroducedDate(introducedDate);
 			c.setDiscontinuedDate(discontinuedDate);
 			// On récupère la Company correspondante
 			c.setCompany(CompanyService.getInstance().findCompanyById(idCompany));
 
-			// On insère le computer dans la base
-			ComputerService.getInstance().insertComputer(c);
+			// On update le computer dans la base
+			ComputerService.getInstance().updateComputer(c);
 
 			// compte le nb de Computer dans la base
 			int nbComputer = ComputerService.getInstance().getNbComputer();
-			request.setAttribute("nbComputer", nbComputer);
+//			request.setAttribute("nbComputer", nbComputer);
 
 			// liste les Computers
 			List<Computer> computerList = ComputerService.getInstance().searchComputersByFilteringAndOrderingWithRange(sFiltre, page, interval, code, true);
-			request.setAttribute("computerList", computerList);
+//			request.setAttribute("computerList", computerList);
 			
 			int nbPage = (int) Math.ceil(ComputerService.getInstance().getListComputers().size()/interval);
 
 			Page<Computer> laPage = new Page<>(nbComputer, page, interval, code, nbPage, sFiltre, computerList);
 			request.setAttribute("pageComputer", laPage);
-			
-			
+
 			this.getServletContext().getRequestDispatcher( "/WEB-INF/dashboard.jsp" ).forward( request, response );
-			//this.getServletContext().getRequestDispatcher( "/RedirectIndexServlet" ).forward( request, response );
 		}
 		else{ // on envoi les messages d'erreur
 			for(Entry<Integer, Integer> entry : errorList.entrySet()) {
@@ -165,9 +193,15 @@ public class AddComputerServlet extends HttpServlet {
 			request.setAttribute("msg", msg.toString());
 			List<Company> companyList = CompanyService.getInstance().getListCompany();
 			request.setAttribute("companyList", companyList);
-			this.getServletContext().getRequestDispatcher( "/WEB-INF/addComputer.jsp" ).forward( request, response );
+			this.getServletContext().getRequestDispatcher( "/WEB-INF/editComputer.jsp" ).forward( request, response );
 		}
 
+
+
+
+		// Mis à jour
+
+		// Redirection vers le dashboard
 	}
 
 }
