@@ -30,16 +30,6 @@ public class Computer {
 		return introducedDate;
 	}
 	
-	/**
-	 * Affiche la date uniquement
-	 * @return
-	 */
-	public String getIntroducedDateString() {
-		if(introducedDate!=null)
-			return new java.sql.Date(introducedDate.getMillis()).toString();
-		else
-			return "";
-	}
 
 	public void setIntroducedDate(DateTime introducedDate) {
 		this.introducedDate = introducedDate;
@@ -49,16 +39,6 @@ public class Computer {
 		return discontinuedDate;
 	}
 	
-	/**
-	 * Affiche la date uniquement
-	 * @return
-	 */
-	public String getDiscontinuedDateString() {
-		if(discontinuedDate!=null)
-			return new java.sql.Date(discontinuedDate.getMillis()).toString();
-		else
-			return "";
-	}
 
 	public void setDiscontinuedDate(DateTime discontinuedDate) {
 		this.discontinuedDate = discontinuedDate;
@@ -192,7 +172,7 @@ public class Computer {
 		}
 	}
 
-	public static ComputerBuilder getComputerBuilder(){
+	public static ComputerBuilder builder(){
 		return new ComputerBuilder();
 	}
 	

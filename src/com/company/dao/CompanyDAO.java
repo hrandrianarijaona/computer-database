@@ -13,7 +13,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import com.company.connection.PoolConnection;
+import com.company.connection.ConnectionFactory;
 import com.company.connection.ProjetConnection;
 import com.company.om.Company;
 
@@ -61,7 +61,7 @@ public enum CompanyDAO implements ICompanyDAO{
 					Long id = results.getLong("id");
 					String name = results.getString("name");
 
-					al.add(Company.getCompanyBuilder().id(id).name(name).build()); // Company créer avec le pattern Builder
+					al.add(Company.builder().id(id).name(name).build()); // Company créer avec le pattern Builder
 					// al.add(new Company(id, name));
 
 				}
@@ -122,7 +122,7 @@ public enum CompanyDAO implements ICompanyDAO{
 				}
 				
 				// fermeture de rsId
-				PoolConnection.INSTANCE.closeObject(rsId);
+				ConnectionFactory.INSTANCE.closeObject(rsId);
 				
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
@@ -156,7 +156,7 @@ public enum CompanyDAO implements ICompanyDAO{
 	 */
 	public Company findCompanyById(Long paramId, Connection connection){
 		// Company company = new Company();
-		Company company = Company.getCompanyBuilder().build(); // créée par le pattern Builder
+		Company company = Company.builder().build(); // créée par le pattern Builder
 
 		// requete de recuperation des companies répertorié dans la base
 		String query = "SELECT * FROM company WHERE id=?;";

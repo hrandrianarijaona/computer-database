@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 
 import org.joda.time.DateTime;
 
-import com.company.connection.PoolConnection;
+import com.company.connection.ConnectionFactory;
 import com.company.connection.ProjetConnection;
 import com.company.om.Company;
 import com.company.om.Computer;
@@ -47,7 +47,7 @@ public enum ComputerDAO implements IComputerDAO{
 		Computer computer = new Computer();
 
 		// Company company = new Company();
-		Company company = Company.getCompanyBuilder().build();
+		Company company = Company.builder().build();
 
 		// requete de recuperation des companies répertorié dans la base
 		String query = "SELECT pc.id, pc.name, pc.introduced, pc.discontinued, comp.id, comp.name FROM computer AS pc LEFT JOIN company AS comp ON pc.company_id=comp.id WHERE pc.id=?;";
@@ -137,7 +137,7 @@ public enum ComputerDAO implements IComputerDAO{
 
 					// Creation de la company à associer
 					// Company cpy = new Company();
-					Company cpy = Company.getCompanyBuilder().build();
+					Company cpy = Company.builder().build();
 
 					cpy.setId(results.getLong("comp.id"));
 					cpy.setName(results.getString("comp.name"));
@@ -207,7 +207,7 @@ public enum ComputerDAO implements IComputerDAO{
 
 					// Creation de la company à associer
 					// Company cpy = new Company();
-					Company cpy = Company.getCompanyBuilder().build();
+					Company cpy = Company.builder().build();
 					cpy.setId(results.getLong("comp.id"));
 					cpy.setName(results.getString("comp.name"));
 
@@ -332,7 +332,7 @@ public enum ComputerDAO implements IComputerDAO{
 				}
 				
 				// fermeture de rsId
-				PoolConnection.INSTANCE.closeObject(rsId);
+				ConnectionFactory.INSTANCE.closeObject(rsId);
 				
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
@@ -430,7 +430,7 @@ public enum ComputerDAO implements IComputerDAO{
 
 					// Creation de la company à associer
 					// Company cpy = new Company();
-					Company cpy = Company.getCompanyBuilder().build();
+					Company cpy = Company.builder().build();
 					cpy.setId(results.getLong("comp.id"));
 					cpy.setName(results.getString("comp.name"));
 
@@ -520,7 +520,7 @@ public enum ComputerDAO implements IComputerDAO{
 
 					// Creation de la company à associer
 					// Company cpy = new Company();
-					Company cpy = Company.getCompanyBuilder().build();
+					Company cpy = Company.builder().build();
 					cpy.setId(results.getLong("comp.id"));
 					cpy.setName(results.getString("comp.name"));
 
@@ -592,7 +592,7 @@ public enum ComputerDAO implements IComputerDAO{
 
 					// Creation de la company à associer
 					// Company cpy = new Company();
-					Company cpy = Company.getCompanyBuilder().build();
+					Company cpy = Company.builder().build();
 					cpy.setId(results.getLong("comp.id"));
 					cpy.setName(results.getString("comp.name"));
 
@@ -689,7 +689,7 @@ public enum ComputerDAO implements IComputerDAO{
 
 					// Creation de la company à associer
 					// Company cpy = new Company();
-					Company cpy = Company.getCompanyBuilder().build();
+					Company cpy = Company.builder().build();
 					cpy.setId(results.getLong("comp.id"));
 					cpy.setName(results.getString("comp.name"));
 
@@ -775,7 +775,7 @@ public enum ComputerDAO implements IComputerDAO{
 
 					// Creation de la company à associer
 					// Company cpy = new Company();
-					Company cpy = Company.getCompanyBuilder().build();
+					Company cpy = Company.builder().build();
 					cpy.setId(results.getLong("comp.id"));
 					cpy.setName(results.getString("comp.name"));
 
@@ -867,7 +867,7 @@ public enum ComputerDAO implements IComputerDAO{
 
 					// Creation de la company à associer
 					// Company cpy = new Company();
-					Company cpy = Company.getCompanyBuilder().build();
+					Company cpy = Company.builder().build();
 					cpy.setId(results.getLong("comp.id"));
 					cpy.setName(results.getString("comp.name"));
 

@@ -27,7 +27,7 @@ public class ComputerMapper {
 		if(cdto.getDiscontinuedDate()!=null)
 			discontinuedDate = new DateTime(cdto.getDiscontinuedDate());
 		
-		Computer computer = Computer.getComputerBuilder().id(id).name(name).introducedDate(introducedDate).discontinuedDate(discontinuedDate).company(company).build();
+		Computer computer = Computer.builder().id(id).name(name).introducedDate(introducedDate).discontinuedDate(discontinuedDate).company(company).build();
 		
 		return computer;
 		

@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="pg" tagdir="/WEB-INF/tags/Pagination"%>
+<%@taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
 <jsp:include page="../include/header.jsp" />
 
 <section id="main">
@@ -57,8 +58,8 @@
 			<c:forEach items="${ pageComputer.liste }" var="comp">
 				<tr>
 					<td><a href="#"><c:out value="${comp.name}" /></td>
-					<td><c:out value="${comp.getIntroducedDateString()}" /></td>
-					<td><c:out value="${comp.getDiscontinuedDateString()}" /></td>
+					<td><joda:format value="${comp.introducedDate}" pattern="yyyy/MM/dd" /></td>
+					<td><joda:format value="${comp.discontinuedDate}" pattern="yyyy/MM/dd" /></td>
 					<td><c:out value="${comp.company.name}" /></td>
 					<form action="EditComputerServlet" method="get">
 						<input type="hidden" name="id" value="${ comp.id }">

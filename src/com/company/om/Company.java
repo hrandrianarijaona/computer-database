@@ -92,7 +92,7 @@ public class Company {
 		}
 	}
 	
-	public static CompanyBuilder getCompanyBuilder(){
+	public static CompanyBuilder builder(){
 		return new CompanyBuilder();
 	}
 

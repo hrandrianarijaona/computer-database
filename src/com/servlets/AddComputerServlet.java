@@ -53,7 +53,7 @@ public class AddComputerServlet extends HttpServlet {
 		cdto.setIdCompany(request.getParameter("company"));
 
 		// On verifie les parametres
-		HashMap<Integer, Integer> errorList = ComputerValidator.validate(cdto);
+		HashMap<String, Integer> errorList = ComputerValidator.validateField(cdto);
 
 		// empty si aucune erreur
 		if(errorList.isEmpty()){
@@ -104,63 +104,11 @@ public class AddComputerServlet extends HttpServlet {
 			this.getServletContext().getRequestDispatcher( "/WEB-INF/dashboard.jsp" ).forward( request, response );
 			//this.getServletContext().getRequestDispatcher( "/RedirectIndexServlet" ).forward( request, response );
 		}
-		else{ // on envoi les messages d'erreur
-			for(Entry<Integer, Integer> entry : errorList.entrySet()) {
-				Integer cle = entry.getKey();
-				Integer valeur = entry.getValue();
-
-				/*
-				 * champ 1 => name
-				 * champ 2 => introducedDate
-				 * champ 3 => discontinuedDate
-				 * champ 4 => idCompany
-				 * Code d'erreur:
-				 * 1 => Champ vide
-				 * 2 => Valeur erroné
-				 * 3 => Date doit être supérieur
-				 */
-				// traitements
-				switch(cle){
-				case 1:
-					switch(valeur){
-					case 1:
-						msg.append("Le nom ne doit pas être vide.<br/>");
-						break;
-					default:
-						msg.append("Valeur inattendu<br/>");
-					}
-					break;
-				case 2:
-					switch(valeur){
-					case 1:
-						msg.append("Introduced date ne doit pas être vide.<br/>");
-						break;
-					case 2:
-						msg.append("Introduced date est mal ecrit. (YYYY-MM-DD)<br/>");
-						break;
-					default:
-						msg.append("Valeur inattendu<br/>");
-					}
-					break;
-				case 3:
-					switch(valeur){
-					case 1:
-						msg.append("Discontinued date ne doit pas être vide.<br/>");
-						break;
-					case 2:
-						msg.append("Discontinued date est mal ecrit. (YYYY-MM-DD)<br/>");
-						break;
-					case 3:
-						msg.append("Discontinued date doit être postérieur à Introduced date.<br/>");
-						break;
-					default:
-						msg.append("Valeur inattendu<br/>");
-					}
-					break;
-				default:
-					msg.append("Clé inattendu<br/>");
-				}
-			}
+		else{ 
+			
+			// on envoi directement la map d'erreur
+			request.setAttribute("errorList", errorList);
+			
 			// On envoi le message d'erreur
 			request.setAttribute("msg", msg.toString());
 			List<Company> companyList = CompanyService.getInstance().getListCompany();

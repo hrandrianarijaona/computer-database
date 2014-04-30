@@ -7,7 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.company.connection.PoolConnection;
+import com.company.connection.ConnectionFactory;
 import com.company.dao.CompanyDAO;
 import com.company.om.Company;
 import com.company.om.Computer;
@@ -44,7 +44,7 @@ public enum CompanyService {
 		Connection connection = null;
 		List<Company> lc = null;
 		try {
-			connection = PoolConnection.INSTANCE.getConnection();
+			connection = ConnectionFactory.INSTANCE.getConnection();
 			log.info("getListCompany... " + connection);
 			lc = CompanyDAO.INSTANCE.getListCompany(connection);
 		} catch (SQLException e) {
@@ -52,7 +52,7 @@ public enum CompanyService {
 			e.printStackTrace();
 			log.error("Probleme dans getListCompany...");
 		}
-		PoolConnection.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect(connection);
 		
 		return lc;
 	}
@@ -65,7 +65,7 @@ public enum CompanyService {
 		Connection connection = null;
 		Long id = null;
 		try {
-			connection = PoolConnection.INSTANCE.getConnection();
+			connection = ConnectionFactory.INSTANCE.getConnection();
 			connection.setAutoCommit(false);
 			id = CompanyDAO.INSTANCE.insertCompany(cp, connection);
 			log.info("insertCompany(" + id + ")" + connection);
@@ -86,7 +86,7 @@ public enum CompanyService {
 			}
 			
 		}
-		PoolConnection.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect(connection);
 		
 	}
 	
@@ -99,7 +99,7 @@ public enum CompanyService {
 		Connection connection = null;
 		Company cpy = null;
 		try {
-			connection = PoolConnection.INSTANCE.getConnection();
+			connection = ConnectionFactory.INSTANCE.getConnection();
 			log.info("findCompanyById(" + paramId + ") " + connection);
 			cpy = CompanyDAO.INSTANCE.findCompanyById(paramId, connection);
 		} catch (SQLException e) {
@@ -107,7 +107,7 @@ public enum CompanyService {
 			e.printStackTrace();
 			log.error("Probleme dans findCompanyById(" + paramId + ") ");
 		}
-		PoolConnection.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect(connection);
 		
 		return cpy;
 	}

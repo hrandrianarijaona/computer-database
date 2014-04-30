@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.company.connection.PoolConnection;
+import com.company.connection.ConnectionFactory;
 
 public enum LogDAO implements ILogDAO {
 	INSTANCE;
@@ -23,7 +23,7 @@ public enum LogDAO implements ILogDAO {
 		PreparedStatement pstmt = null;
 
 		try {
-			c = PoolConnection.getInstance().getConnection();
+			c = ConnectionFactory.getInstance().getConnection();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

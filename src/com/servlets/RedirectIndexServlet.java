@@ -1,9 +1,6 @@
 package com.servlets;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,11 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.company.connection.PoolConnection;
-import com.company.dao.LogDAO;
 import com.company.om.Computer;
 import com.company.om.Page;
 import com.company.services.ComputerService;

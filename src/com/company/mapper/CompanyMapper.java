@@ -11,7 +11,7 @@ public class CompanyMapper {
 	
 	public static Company mapCompany(CompanyDTO cdto){
 		Long id = Long.parseLong(cdto.getId());
-		Company company = Company.getCompanyBuilder().id(id).name(cdto.getName()).build();
+		Company company = Company.builder().id(id).name(cdto.getName()).build();
 		return company;
 	}
 

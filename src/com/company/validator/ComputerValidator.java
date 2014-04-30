@@ -66,6 +66,56 @@ public class ComputerValidator {
 
 		return errorMap;
 	}
+	
+	/**
+	 * Valide les champs d'un Computer:
+	 * champ 1 => name
+	 * champ 2 => introducedDate
+	 * champ 3 => discontinuedDate
+	 * champ 4 => idCompany
+	 * Code d'erreur:
+	 * 1 => Champ vide
+	 * 2 => Valeur erroné
+	 * 3 => Date doit être supérieur
+	 * @return
+	 */
+	public static HashMap<String, Integer> validateField(ComputerDTO cdto){
+		HashMap<String, Integer> errorMap = new HashMap<>();
+
+		//Pattern checkDate = Pattern.compile("(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-((19|20)\\d\\d)");
+		Pattern checkDate = Pattern.compile("[0-9]{4}-[0-1][0-9]-[0-3][0-9]");
+
+		// Validation du nom de Computer
+		if((cdto.getName().equals(""))||(cdto.getName()==null))
+			errorMap.put("name", 1);
+
+		// Validation du format des dates
+		Matcher m = checkDate.matcher(cdto.getIntroducedDate());
+		if((!m.matches())||(!checkDay(cdto.getIntroducedDate()))){
+			errorMap.put("introducedDate", 2);
+		}
+		else{
+			// On verifie le format de la date
+			m = checkDate.matcher(cdto.getDiscontinuedDate());
+			if((!m.matches())||(!checkDay(cdto.getDiscontinuedDate()))){
+				errorMap.put("discontinuedDate", 2);
+			}else{
+				// On verifie quel est supérieur à l'autre date
+				DateTime intro = new DateTime(cdto.getIntroducedDate());
+				DateTime disc = new DateTime(cdto.getDiscontinuedDate());
+				if(intro.isAfter(disc)){
+					errorMap.put("discontinuedDate", 3);
+				}
+			}
+
+		}
+
+		// Verification sur idCompany
+		if(Integer.parseInt(cdto.getIdCompany())<0)
+			errorMap.put("company", 2);		
+
+		return errorMap;
+	}
 
 	/**
 	 * Validate date format with regular expression
