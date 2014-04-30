@@ -116,6 +116,17 @@ public class ComputerValidator {
 
 		return errorMap;
 	}
+	
+	/**
+	 * Verifie qu'un chaine est un nombre positif
+	 * @param sNumber
+	 * @return
+	 */
+	public static boolean isPositifNumber(String sNumber){
+		Pattern checkNumber = Pattern.compile("^[0-9]*$");
+		Matcher m = checkNumber.matcher(sNumber);
+		return m.matches();
+	}
 
 	/**
 	 * Validate date format with regular expression

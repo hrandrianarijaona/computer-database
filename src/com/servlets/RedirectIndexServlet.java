@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.company.om.Computer;
 import com.company.om.Page;
 import com.company.services.ComputerService;
+import com.company.validator.ComputerValidator;
 
 /**
  * Servlet implementation class RedirectIndexServlet
@@ -43,9 +44,9 @@ public class RedirectIndexServlet extends HttpServlet {
 		String sFiltre = request.getParameter("filter");
 		
 		// vérifie les paramètres et les initialise sinon
-		if(sPage!=null)
+		if((sPage!=null)&&(ComputerValidator.isPositifNumber(sPage)))
 			page = Integer.parseInt(sPage);
-		if(sInterval!=null)
+		if((sInterval!=null)&&(ComputerValidator.isPositifNumber(sInterval)))
 			interval = Integer.parseInt(sInterval);
 		if(sFiltre==null)
 			sFiltre = "";

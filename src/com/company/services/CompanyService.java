@@ -52,7 +52,7 @@ public enum CompanyService {
 			e.printStackTrace();
 			log.error("Probleme dans getListCompany...");
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return lc;
 	}
@@ -86,7 +86,7 @@ public enum CompanyService {
 			}
 			
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 	}
 	
@@ -107,7 +107,7 @@ public enum CompanyService {
 			e.printStackTrace();
 			log.error("Probleme dans findCompanyById(" + paramId + ") ");
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return cpy;
 	}

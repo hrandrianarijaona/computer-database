@@ -56,7 +56,7 @@ public enum ComputerService {
 			e.printStackTrace();
 		}
 		Computer computer = ComputerDAO.INSTANCE.findComputerById(paramId, connection);
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return computer;
 	}
@@ -88,7 +88,7 @@ public enum ComputerService {
 			}
 			e.printStackTrace();
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return lc;
 	}
@@ -112,7 +112,7 @@ public enum ComputerService {
 		List<Computer> lc = null;
 		
 		lc = ComputerDAO.INSTANCE.getListComputersByFilteringAndOrdering(filter, isAsc, connection);
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		
 		return lc;
@@ -137,7 +137,7 @@ public enum ComputerService {
 		List<Computer> lc = null;
 		
 		lc = ComputerDAO.INSTANCE.getListComputersWithRange(rang, interval, connection);
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return lc;
 	}
@@ -158,7 +158,7 @@ public enum ComputerService {
 			e.printStackTrace();
 		}
 		int nbComputer = ComputerDAO.INSTANCE.getNbComputer(connection);
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return nbComputer;
 	}
@@ -190,7 +190,7 @@ public enum ComputerService {
 			}
 			e.printStackTrace();
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 	}
 	
@@ -222,7 +222,7 @@ public enum ComputerService {
 				log.error("Probleme de rollback du deleteComputer...");
 			}
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 	}
 	
@@ -242,7 +242,7 @@ public enum ComputerService {
 			e.printStackTrace();
 			log.error("Probleme dans searchComputers... " + connection);
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return lc;
 	}
@@ -266,7 +266,7 @@ public enum ComputerService {
 			e.printStackTrace();
 			log.error("Probleme dans searchComputersByFilteringAndOrdering...");
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return lc;
 	}
@@ -292,7 +292,7 @@ public enum ComputerService {
 			e.printStackTrace();
 			log.error("Probleme dans searchComputersByFilteringAndOrderingWithRange...");
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return lc;
 	}
@@ -313,7 +313,7 @@ public enum ComputerService {
 			e.printStackTrace();
 			log.error("Probleme dans searchComputersWithRange");
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return lc;
 	}
@@ -337,7 +337,7 @@ public enum ComputerService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 		return lc;
 	}
@@ -370,7 +370,7 @@ public enum ComputerService {
 			}
 			
 		}
-		ConnectionFactory.INSTANCE.disconnect(connection);
+		ConnectionFactory.INSTANCE.disconnect();
 		
 	}
 
